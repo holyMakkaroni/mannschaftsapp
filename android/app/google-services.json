@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "76172394715",
+    "project_id": "teamapp-21008",
+    "storage_bucket": "teamapp-21008.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:76172394715:android:a0245567841e62e291ccfe",
+        "android_client_info": {
+          "package_name": "com.marco.mannschaftsapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCGTzLEms3NlxotoMtRFIqXknqDA2-e_Yo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
