@@ -17,112 +17,63 @@ class _AddEntryPageState extends State<AddEntryPage> {
   String description = '';
 
   final _formKey = GlobalKey<FormState>();
-  final CollectionReference cashEntriesRef =
-      FirebaseFirestore.instance.collection('cash_entries');
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Neuen Eintrag hinzufügen'),
-        centerTitle: true,
-      ),
+      appBar: AppBar(title: const Text('Eintrag hinzufügen')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
           child: Column(
             children: [
-              // Dropdown für Einnahme oder Ausgabe
               DropdownButtonFormField<String>(
                 value: type,
                 items: const [
-                  DropdownMenuItem(
-                    value: 'income',
-                    child: Text('Einnahme'),
-                  ),
-                  DropdownMenuItem(
-                    value: 'expense',
-                    child: Text('Ausgabe'),
-                  ),
+                  DropdownMenuItem(value: 'income', child: Text('Einnahme')),
+                  DropdownMenuItem(value: 'expense', child: Text('Ausgabe')),
                 ],
                 onChanged: (value) {
                   setState(() {
                     type = value!;
                   });
                 },
-                decoration: const InputDecoration(labelText: 'Art'),
+                decoration: const InputDecoration(labelText: 'Typ'),
               ),
-              // Datumsauswahl
               TextFormField(
-                readOnly: true,
-                decoration: InputDecoration(
-                  labelText: 'Datum',
-                  hintText:
-                      '${selectedDate.day}.${selectedDate.month}.${selectedDate.year}',
-                ),
-                onTap: () async {
-                  DateTime? pickedDate = await showDatePicker(
-                    context: context,
-                    initialDate: selectedDate,
-                    firstDate: DateTime(2000),
-                    lastDate: DateTime(2100),
-                  );
-                  if (pickedDate != null) {
-                    setState(() {
-                      selectedDate = pickedDate;
-                    });
-                  }
-                },
-              ),
-              // Betrag
-              TextFormField(
-                keyboardType:
-                    const TextInputType.numberWithOptions(decimal: true),
                 decoration: const InputDecoration(labelText: 'Betrag'),
+                keyboardType: TextInputType.number,
+                onChanged: (value) {
+                  amount = double.tryParse(value) ?? 0.0;
+                },
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Bitte Betrag eingeben';
-                  }
-                  if (double.tryParse(value.replaceAll(',', '.')) == null) {
-                    return 'Ungültiger Betrag';
+                    return 'Bitte einen Betrag eingeben';
                   }
                   return null;
                 },
-                onSaved: (value) {
-                  amount = double.parse(value!.replaceAll(',', '.'));
-                },
               ),
-              // Verwendungszweck
               TextFormField(
-                decoration:
-                    const InputDecoration(labelText: 'Verwendungszweck'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Bitte Verwendungszweck eingeben';
-                  }
-                  return null;
-                },
-                onSaved: (value) {
-                  description = value!;
+                decoration: const InputDecoration(labelText: 'Beschreibung'),
+                onChanged: (value) {
+                  description = value;
                 },
               ),
-              const SizedBox(height: 20),
               ElevatedButton(
-                child: const Text('Hinzufügen'),
                 onPressed: () async {
                   if (_formKey.currentState!.validate()) {
-                    _formKey.currentState!.save();
-                    await cashEntriesRef.add({
+                    await FirebaseFirestore.instance.collection('entries').add({
                       'type': type,
-                      'date': Timestamp.fromDate(selectedDate),
                       'amount': amount,
                       'description': description,
+                      'date': selectedDate,
                     });
                     widget.onEntryAdded();
-                    Navigator.of(context).pop();
+                    Navigator.pop(context);
                   }
                 },
+                child: const Text('Speichern'),
               ),
             ],
           ),

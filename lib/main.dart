@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-
 import 'firebase_options.dart';
 import 'home_page.dart';
+import 'styles.dart'; // Importiere die Styling-Datei
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,10 +22,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Mannschafts App',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        useMaterial3: true, // Optional, je nach Bedarf
-      ),
+      theme: appTheme(context),
       home: HomePage(title: 'Mannschafts App'),
     );
   }

@@ -3,6 +3,9 @@ import 'home_page.dart';
 import 'player_list.dart';
 import 'team_cash_page.dart';
 import 'team_list.dart';
+import 'add_event_page.dart';
+import 'training_list.dart';
+import 'game_list.dart';
 
 class AppDrawer extends StatelessWidget {
   const AppDrawer({super.key});
@@ -60,13 +63,35 @@ class AppDrawer extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: Icon(Icons.group),
-            title: Text('Teams'),
+            leading: const Icon(Icons.group),
+            title: const Text('Teams'),
             onTap: () {
               Navigator.pop(context);
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => TeamList()),
+              );
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.event),
+            title: const Text('Trainingseinheiten'),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => TrainingList()),
+              );
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.sports_soccer),
+            title: const Text('Spieltermine'),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => GameList()),
               );
             },
           ),
