@@ -26,7 +26,7 @@ class HomePage extends StatelessWidget {
                   MaterialPageRoute(
                       builder: (context) => AddEventPage(
                             onEventAdded: () {
-                              // Hier könnte die Logik stehen, um die Übersicht der nächsten Termine zu aktualisieren
+                              // Logik zur Aktualisierung der Übersicht hinzufügen
                             },
                           )),
                 );
@@ -48,18 +48,36 @@ class HomePage extends StatelessWidget {
                   return const Text('Keine bevorstehenden Termine.');
                 }
                 final events = snapshot.data!.docs;
-                return ListView.builder(
-                  itemCount: events.length,
-                  itemBuilder: (context, index) {
-                    final event = events[index];
-                    return ListTile(
-                      title: Text(event['eventType'] == 'training'
-                          ? 'Trainingseinheit'
-                          : 'Spiel: ${event['matchup']}'),
-                      subtitle: Text(
-                          '${event['location']} - ${event['date'].toDate()}'),
-                    );
-                  },
+                return SingleChildScrollView(
+                  scrollDirection: Axis
+                      .horizontal, // Damit die Tabelle scrollbar wird, wenn sie zu breit ist
+                  child: DataTable(
+                    columns: const [
+                      DataColumn(label: Text('Spielpaarung')),
+                      DataColumn(label: Text('Uhrzeit')),
+                      DataColumn(label: Text('Datum')),
+                      DataColumn(label: Text('Ort')),
+                    ],
+                    rows: events.map((event) {
+                      final eventType = event['eventType'];
+                      final matchup = eventType == 'match'
+                          ? event['matchup']
+                          : 'Trainingseinheit';
+                      final dateTime = event['date'].toDate();
+                      final date =
+                          '${dateTime.day}.${dateTime.month}.${dateTime.year}';
+                      final time =
+                          '${dateTime.hour}:${dateTime.minute.toString().padLeft(2, '0')}';
+                      final location = event['location'];
+
+                      return DataRow(cells: [
+                        DataCell(Text(matchup)),
+                        DataCell(Text(time)),
+                        DataCell(Text(date)),
+                        DataCell(Text(location)),
+                      ]);
+                    }).toList(),
+                  ),
                 );
               },
             ),
